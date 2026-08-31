@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Collar Voltage Report</title>
+<style>
+  :root {
+    --green-dark: #115631;
+    --green-mid: #2d6a4f;
+    --green-light: #52b788;
+    --green-pale: #f0f7f0;
+    --border: #d8e8d8;
+    --text: #1a1a1a;
+    --text-muted: #555;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+    color: var(--text);
+    line-height: 1.6;
+    background: #fff;
+  }
+  header { border-bottom: 2px solid var(--green-mid); padding-bottom: 16px; margin-bottom: 32px; }
+  h1 { font-size: 2.1em; color: var(--green-mid); margin: 0 0 8px; }
+  .subtitle { color: var(--text-muted); font-size: 1.05em; margin: 0; }
+  .meta { color: #888; font-size: 0.85em; margin-top: 12px; }
+  .meta code {
+    background: var(--green-pale);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.95em;
+  }
+  h2 {
+    font-size: 1.2em;
+    color: var(--green-mid);
+    margin-top: 2.2em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+  }
+  p { color: var(--text); }
+  ul.deliverables { padding-left: 1.2em; }
+  ul.deliverables li { margin-bottom: 4px; }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .card {
+    display: block;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    text-decoration: none;
+    color: var(--text);
+    background: var(--green-pale);
+    transition: box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+  .card:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.08); border-color: var(--green-light); }
+  .card .card-title { font-weight: 600; color: var(--green-dark); font-size: 1.05em; }
+  .card .card-desc { font-size: 0.9em; color: var(--text-muted); margin-top: 6px; }
+  .card .card-arrow { float: right; color: var(--green-light); }
+  footer {
+    margin-top: 3em;
+    padding-top: 1.5em;
+    border-top: 1px solid var(--border);
+    font-size: 0.85em;
+    color: #888;
+  }
+  footer a { color: var(--green-mid); }
+  a { color: var(--green-mid); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Collar Voltage Report</h1>
+  <p class="subtitle">Per-subject historic collar/battery voltage monitoring, compared against a configurable previous period</p>
+  <p class="meta">Workflow id: <code>source_voltage</code></p>
+</header>
+
+<p>
+  This Ecoscope workflow pulls GPS relocations and their embedded battery/collar-voltage
+  telemetry from EarthRanger for a named subject group, compares the current period against
+  a configurable previous period, and produces a per-subject historic voltage chart plus a
+  merged Word doc report.
+</p>
+
+<ul class="deliverables">
+  <li><strong>1 historic voltage chart</strong> per subject — current voltage vs. previous-period min/mean/max band</li>
+  <li><strong>2 GeoParquet exports</strong> — current and previous-period relocations with extracted voltage</li>
+  <li><strong>A dashboard widget</strong> — merged Collar Voltage map/plot widget</li>
+  <li><strong>A Word doc report</strong> — cover page plus every subject's historic voltage chart</li>
+</ul>
+
+<h2>Documentation</h2>
+<div class="cards">
+  <a class="card" href="user-guide.html">
+    <span class="card-arrow">&rarr;</span>
+    <div class="card-title">User Guide</div>
+    <div class="card-desc">Step-by-step setup: connections, workflow configuration, and outputs.</div>
+  </a>
+  <a class="card" href="collar_voltage_technical_guide.pdf">
+    <span class="card-arrow">&rarr;</span>
+    <div class="card-title">Technical Guide</div>
+    <div class="card-desc">PDF reference covering every task, parameter, and output file in the pipeline.</div>
+  </a>
+  <a class="card" href="https://github.com/wildlife-dynamics/wt-collar-voltage">
+    <span class="card-arrow">&rarr;</span>
+    <div class="card-title">Source Repository</div>
+    <div class="card-desc"><code>spec.yaml</code>, test cases, and the full workflow definition.</div>
+  </a>
+</div>
+
+<footer>
+  Published from <a href="https://github.com/wildlife-dynamics/wt-collar-voltage">wildlife-dynamics/wt-collar-voltage</a> via GitHub Pages (served from <code>/docs</code> on <code>main</code>).
+</footer>
+
+</body>
+</html>

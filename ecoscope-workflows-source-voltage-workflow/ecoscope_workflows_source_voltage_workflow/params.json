@@ -18,7 +18,7 @@
       ],
       "type": "object",
       "description": "Add information that will help to differentiate this workflow from another.",
-      "title": "Set workflow details"
+      "title": "Set Workflow Details"
     },
     "time_range": {
       "additionalProperties": false,
@@ -58,7 +58,7 @@
       ],
       "type": "object",
       "description": "Choose the period of time to analyze.",
-      "title": "Define analysis time range"
+      "title": "Time Range"
     },
     "er_client_name": {
       "additionalProperties": false,
@@ -73,7 +73,7 @@
         "data_source"
       ],
       "type": "object",
-      "title": "Connect to earth ranger"
+      "title": "Connect to EarthRanger"
     },
     "subject_group_var": {
       "additionalProperties": false,
@@ -85,6 +85,31 @@
       },
       "required": [
         "var"
+      ],
+      "type": "object",
+      "title": ""
+    },
+    "set_previous_period": {
+      "additionalProperties": false,
+      "properties": {
+        "offset": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PresetPreviousPeriod"
+            },
+            {
+              "$ref": "#/$defs/CustomPreviousPeriod"
+            },
+            {
+              "$ref": "#/$defs/CalendarPreviousPeriod"
+            }
+          ],
+          "title": "Offset",
+          "description": "How to compute the start of the comparison period."
+        }
+      },
+      "required": [
+        "offset"
       ],
       "type": "object",
       "title": ""
@@ -101,13 +126,13 @@
               "$ref": "#/$defs/LocalFile"
             }
           ],
-          "title": "Input Method"
+          "default": null,
+          "title": "Input Method",
+          "description": "How to obtain the file: download from a URL or use a local file path"
         }
       },
-      "required": [
-        "input_method"
-      ],
       "type": "object",
+      "required": [],
       "title": ""
     }
   },
@@ -151,6 +176,81 @@
         "name"
       ],
       "title": "EarthRangerConnection",
+      "type": "object"
+    },
+    "CalendarPreviousPeriod": {
+      "properties": {
+        "since": {
+          "description": "Select the start date for the comparison period.",
+          "format": "date-time",
+          "title": "Since",
+          "type": "string"
+        }
+      },
+      "required": [
+        "since"
+      ],
+      "title": "Calendar",
+      "type": "object"
+    },
+    "CustomPreviousPeriod": {
+      "properties": {
+        "years": {
+          "default": 0,
+          "title": "Years",
+          "type": "integer"
+        },
+        "months": {
+          "default": 0,
+          "title": "Months",
+          "type": "integer"
+        },
+        "weeks": {
+          "default": 0,
+          "title": "Weeks",
+          "type": "integer"
+        },
+        "days": {
+          "default": 0,
+          "title": "Days",
+          "type": "integer"
+        },
+        "hours": {
+          "default": 0,
+          "title": "Hours",
+          "type": "integer"
+        },
+        "minutes": {
+          "default": 0,
+          "title": "Minutes",
+          "type": "integer"
+        },
+        "seconds": {
+          "default": 0,
+          "title": "Seconds",
+          "type": "integer"
+        }
+      },
+      "title": "Custom",
+      "type": "object"
+    },
+    "PresetPreviousPeriod": {
+      "properties": {
+        "preset": {
+          "default": "1 month back",
+          "description": "Choose a predefined time offset.",
+          "enum": [
+            "Same as current period",
+            "1 month back",
+            "3 months back",
+            "6 months back",
+            "1 year back"
+          ],
+          "title": "Preset",
+          "type": "string"
+        }
+      },
+      "title": "Preset",
       "type": "object"
     },
     "DownloadFile": {
@@ -202,6 +302,7 @@
       "time_range",
       "er_client_name",
       "subject_group_var",
+      "set_previous_period",
       "logo_path"
     ]
   },

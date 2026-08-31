@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Collar Voltage Report — User Guide</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="data:text/css,body%20%7B%20font-family%3A%20-apple-system%2C%20BlinkMacSystemFont%2C%20%22Segoe%20UI%22%2C%20sans-serif%3B%20max-width%3A%20860px%3B%20margin%3A%2040px%20auto%3B%20padding%3A%200%2024px%3B%20color%3A%20%231a1a1a%3B%20line-height%3A%201.6%3B%20%7D%0Ah1%20%7B%20font-size%3A%202em%3B%20border-bottom%3A%202px%20solid%20%232d6a4f%3B%20padding-bottom%3A%2010px%3B%20color%3A%20%232d6a4f%3B%20%7D%0Ah2%20%7B%20font-size%3A%201.4em%3B%20color%3A%20%232d6a4f%3B%20margin-top%3A%202em%3B%20border-bottom%3A%201px%20solid%20%23b7e4c7%3B%20padding-bottom%3A%204px%3B%20%7D%0Ah3%20%7B%20font-size%3A%201.1em%3B%20color%3A%20%2340916c%3B%20margin-top%3A%201.5em%3B%20%7D%0Ah4%20%7B%20font-size%3A%201em%3B%20color%3A%20%2352b788%3B%20%7D%0Aimg%20%7B%20max-width%3A%20100%25%3B%20border%3A%201px%20solid%20%23d8e8d8%3B%20border-radius%3A%206px%3B%20margin%3A%2016px%200%3B%20box-shadow%3A%200%202px%208px%20rgba%280%2C0%2C0%2C0.1%29%3B%20%7D%0Apre%20%7B%20background%3A%20%23f4f4f4%3B%20padding%3A%2012px%2016px%3B%20border-radius%3A%206px%3B%20font-size%3A%200.9em%3B%20overflow-x%3A%20auto%3B%20border-left%3A%204px%20solid%20%2352b788%3B%20%7D%0Acode%20%7B%20background%3A%20%23f0f7f0%3B%20padding%3A%202px%205px%3B%20border-radius%3A%203px%3B%20font-size%3A%200.9em%3B%20%7D%0Apre%20code%20%7B%20background%3A%20none%3B%20padding%3A%200%3B%20%7D%0Atable%20%7B%20border-collapse%3A%20collapse%3B%20width%3A%20100%25%3B%20margin%3A%2016px%200%3B%20font-size%3A%200.95em%3B%20%7D%0Ath%20%7B%20background%3A%20%232d6a4f%3B%20color%3A%20white%3B%20padding%3A%2010px%2014px%3B%20text-align%3A%20left%3B%20%7D%0Atd%20%7B%20padding%3A%209px%2014px%3B%20border-bottom%3A%201px%20solid%20%23d8e8d8%3B%20%7D%0Atr%3Anth-child%28even%29%20td%20%7B%20background%3A%20%23f0f7f0%3B%20%7D%0Ahr%20%7B%20border%3A%20none%3B%20border-top%3A%201px%20solid%20%23d8e8d8%3B%20margin%3A%202em%200%3B%20%7D%0Ablockquote%20%7B%20border-left%3A%204px%20solid%20%2352b788%3B%20margin%3A%201em%200%3B%20padding%3A%208px%2016px%3B%20background%3A%20%23f0f7f0%3B%20color%3A%20%23444%3B%20border-radius%3A%200%204px%204px%200%3B%20%7D%0A" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+</header>
+<h1 id="collar-voltage-report-user-guide">Collar Voltage Report — User Guide</h1>
+<p>This guide walks you through configuring and running the Collar Voltage Report workflow (internal id <code>source_voltage</code>), which pulls GPS relocations and their embedded battery/collar-voltage telemetry from EarthRanger for a named subject group, compares the current period against a configurable previous period, and produces a per-subject historic voltage chart plus a merged Word doc report.</p>
+<hr />
+<h2 id="overview">Overview</h2>
+<p>For each subject in the selected group, the workflow delivers:</p>
+<ul>
+<li>A <strong>historic voltage chart</strong> — the subject’s current-period voltage plotted against a min/mean/max band derived from the previous period (falls back to the current period’s own band when no previous-period data is available)</li>
+<li><strong>2 combined GeoParquet exports</strong> — all subjects’ current-period and previous-period relocations, each with an extracted <code>voltage</code> column</li>
+<li><strong>A dashboard widget</strong> — one merged “Collar Voltage” map/plot widget per subject group run</li>
+<li><strong>A Word doc report</strong> (<code>overall_report.docx</code>) — cover page (with organisation logo, prepared-by, and report period) plus every subject’s historic voltage chart, generated from a downloadable template</li>
+</ul>
+<hr />
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Before running the workflow, ensure you have:</p>
+<ul>
+<li>Access to an <strong>EarthRanger</strong> instance with subject group observations whose <code>observation_details</code> include a battery/voltage field — the workflow looks for <code>battery</code>, <code>mainVoltage</code>, <code>batt</code>, or <code>power</code> (in that order) and uses whichever is present</li>
+<li><em>(Optional)</em> An <strong>organisation logo</strong> file (PNG or JPG) to display on the Word report’s cover page — only needed if you enable the Word doc report</li>
+</ul>
+<hr />
+<h2 id="step-by-step-configuration">Step-by-Step Configuration</h2>
+<h3 id="step-1-add-the-workflow-template">Step 1 — Add the Workflow Template</h3>
+<p>In the workflow runner, go to <strong>Workflow Templates</strong> and click <strong>Add Workflow Template</strong>. Paste the GitHub repository URL into the <strong>Github Link</strong> field:</p>
+<pre><code>https://github.com/wildlife-dynamics/wt-source-voltage.git</code></pre>
+<p>Then click <strong>Add Template</strong>.</p>
+<hr />
+<h3 id="step-2-configure-an-earthranger-connection">Step 2 — Configure an EarthRanger Connection</h3>
+<p>Navigate to <strong>Data Sources</strong> and click <strong>Connect</strong>, then select <strong>EarthRanger</strong>. Fill in the connection form:</p>
+<ul>
+<li><strong>Data Source Name</strong> — a label to identify this connection</li>
+<li><strong>EarthRanger URL</strong> — your instance URL (e.g. <code>your-site.pamdas.org</code>)</li>
+<li><strong>EarthRanger Username</strong> and <strong>EarthRanger Password</strong></li>
+</ul>
+<blockquote>
+<p>Credentials are not validated at setup time. Any authentication errors will appear when the workflow runs.</p>
+</blockquote>
+<p>Click <strong>Connect</strong> to save.</p>
+<hr />
+<h3 id="step-3-select-the-workflow">Step 3 — Select the Workflow</h3>
+<p>After the template is added, it appears in the <strong>Workflow Templates</strong> list. Click it to open the workflow configuration form.</p>
+<blockquote>
+<p>The card may show <strong>Initializing…</strong> briefly while the environment is set up.</p>
+</blockquote>
+<hr />
+<h3 id="step-4-set-workflow-details-and-time-range">Step 4 — Set Workflow Details and Time Range</h3>
+<p>The configuration form opens with two sections at the top.</p>
+<p><strong>Set Workflow Details</strong></p>
+<table>
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 65%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Workflow Name</td>
+<td>A short name to identify this run</td>
+</tr>
+<tr class="even">
+<td>Workflow Description</td>
+<td>Optional notes (e.g. subject group, site, or reporting period)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Time Range</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Timezone</td>
+<td>Select the local timezone (e.g. <code>Africa/Nairobi UTC+03:00</code>)</td>
+</tr>
+<tr class="even">
+<td>Since</td>
+<td>Start date and time of the current analysis period</td>
+</tr>
+<tr class="odd">
+<td>Until</td>
+<td>End date and time of the current analysis period</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Grouping is fixed to <strong>Subject Name</strong> — there is no grouping choice to make.</p>
+</blockquote>
+<hr />
+<h3 id="step-5-connect-to-earthranger-and-set-subject-group">Step 5 — Connect to EarthRanger and Set Subject Group</h3>
+<p><strong>Connect to EarthRanger</strong></p>
+<p>Select the EarthRanger data source configured in Step 2 from the <strong>Data Source</strong> dropdown.</p>
+<p><strong>Subject Group</strong></p>
+<p>Enter the name of the EarthRanger subject group to analyse in the <strong>Subject Group Name</strong> field (default: <code>Elephants</code>). Each subject in the group is processed individually.</p>
+<hr />
+<h3 id="step-6-configure-the-previous-period">Step 6 — Configure the Previous Period</h3>
+<p><strong>Previous Period</strong></p>
+<p>Every option below computes a comparison period that ends on the same <strong>Start Date</strong> as your current time range (so the two periods never overlap) — only the comparison period’s own Start Date changes:</p>
+<table>
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 68%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Mode</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Custom</td>
+<td>Enter your own Years / Months / Weeks / Days offset (defaults to 1 month back)</td>
+</tr>
+<tr class="even">
+<td>Preset</td>
+<td>Choose a common lookback: 1, 3, or 6 months, or 1 year back</td>
+</tr>
+<tr class="odd">
+<td>Calendar</td>
+<td>Pick an exact Start Date</td>
+</tr>
+</tbody>
+</table>
+<p>The previous period’s relocations are used solely to compute the historic min/mean/max voltage band; if no previous-period data is found, the band collapses to the current period’s own values.</p>
+<hr />
+<h3 id="step-7-configure-the-word-doc-report">Step 7 — Configure the Word Doc Report</h3>
+<p><strong>Generate Word Doc Report</strong></p>
+<table>
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 65%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Report Logo</td>
+<td>Upload the organisation logo to display on the report cover page (PNG or JPG recommended). Required if you want a logo on the cover page; leave blank to omit it — the report still generates without one.</td>
+</tr>
+</tbody>
+</table>
+<p>Once all parameters are set, click <strong>Submit</strong>.</p>
+<hr />
+<h2 id="running-the-workflow">Running the Workflow</h2>
+<p>Once submitted, the runner will:</p>
+<ol type="1">
+<li>Fetch subject group observations from EarthRanger for the current time range, convert <code>fixtime</code> to the analysis timezone, and derive relocations (dropping points at <code>(180,90)</code>, <code>(0,0)</code>, and <code>(1,1)</code>).</li>
+<li>Fetch subject group observations for the computed previous period and process them the same way.</li>
+<li>Sort both current and previous relocations by <code>fixtime</code> and persist each as GeoParquet (<code>relocations.parquet</code>, <code>previous_period_relocations.parquet</code>).</li>
+<li>Extract a <code>voltage</code> column from each relocation set’s <code>observation_details</code> JSON, checking the <code>battery</code>, <code>mainVoltage</code>, <code>batt</code>, and <code>power</code> fields in order.</li>
+<li>Split both relocation sets by subject name and pair each subject’s current and previous slices together.</li>
+<li>Plot each subject’s historic voltage chart — current-period voltage against the previous period’s min/mean/max band (widened slightly if the band collapses to a single value; falls back to the current period alone when no previous-period data exists).</li>
+<li>Build each chart’s filename from a safe-string version of the subject’s name (<code>&lt;subject&gt;_historic_voltage.html</code>), persist the chart HTML, and convert it to PNG.</li>
+<li>Assemble a “Collar Voltage” map widget per subject and merge them into a single dashboard widget.</li>
+<li>Download the Word report template and, if provided, the organisation logo.</li>
+<li>Generate the merged Word doc report (<code>overall_report.docx</code>) — cover page (logo, prepared-by, report period) plus every subject’s historic voltage chart.</li>
+<li>Assemble the interactive dashboard and save all outputs to the directory specified by <code>ECOSCOPE_WORKFLOWS_RESULTS</code>.</li>
+</ol>
+<hr />
+<h2 id="output-files">Output Files</h2>
+<p>All outputs are written to <code>$ECOSCOPE_WORKFLOWS_RESULTS/</code>. Files marked with <code>&lt;subject&gt;</code> are produced once per subject in the group.</p>
+<h3 id="per-subject-outputs">Per-subject outputs</h3>
+<table>
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 68%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>&lt;subject&gt;_historic_voltage.html</code> / <code>.png</code></td>
+<td>Historic voltage chart — current voltage vs. previous-period min/mean/max band</td>
+</tr>
+</tbody>
+</table>
+<h3 id="combined-outputs">Combined outputs</h3>
+<table>
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 68%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>relocations.parquet</code></td>
+<td>All subjects’ current-period relocations, including the extracted <code>voltage</code> column</td>
+</tr>
+<tr class="even">
+<td><code>previous_period_relocations.parquet</code></td>
+<td>All subjects’ previous-period relocations, including the extracted <code>voltage</code> column</td>
+</tr>
+<tr class="odd">
+<td><code>overall_report.docx</code></td>
+<td>Final Word doc report (cover page + every subject’s historic voltage chart)</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
